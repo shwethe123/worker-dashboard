@@ -12,16 +12,16 @@ const items1 = ['1', '2', '3'].map((key) => ({
 }));
 
 const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  const key = String(index + 1);
+  const key = String(index + 1); // key is a string: "1", "2", "3"
   return {
     key: `sub${key}`,
     icon: React.createElement(icon),
-    label: `subnav ${key}`,
+    label: key === "1" ? "Sell All" : `subnav ${key}`, // Compare with "1" (string)
     children: new Array(4).fill(null).map((_, j) => {
       const subKey = index * 4 + j + 1;
       return {
         key: subKey,
-        label: `option${subKey}`,
+        label: subKey === 1 ? "Overview" : subKey === 2 ? "ဆိုင်(၁)" : `option${subKey}`,
       };
     }),
   };
@@ -91,7 +91,7 @@ const App = () => {
             height: '100%',
           }}
         >
-          <Breadcrumb
+          {/* <Breadcrumb
             items={[
               {
                 title: <a href="/home">Home</a>,
@@ -106,7 +106,7 @@ const App = () => {
             style={{
               margin: '16px 0',
             }}
-          />
+          /> */}
           <Content
             style={{
               padding: 24,
@@ -121,6 +121,7 @@ const App = () => {
             {selectedContent === 'Content 1' && <div><Dashboard/></div>}
             {selectedContent === 'Content 2' && <div><TestTable/></div>}
             {selectedContent === 'Content 3' && <div>Content 3</div>}
+            {selectedContent === 'Content 4' && <div>Content 4</div>}
           </Content>
         </Layout>
       </Layout>

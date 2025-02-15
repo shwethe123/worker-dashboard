@@ -1,5 +1,5 @@
 
-import { Layout, Menu, Breadcrumb, Card, Statistic, Row, Col, Button, DatePicker } from 'antd';
+import { Layout, Menu, Breadcrumb, Card, Statistic, Row, Col, Button, DatePicker, Segmented } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined, SettingFilled } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -8,7 +8,7 @@ const { RangePicker } = DatePicker;
 const Dashboard = () => {
   return (
     <Layout style={{ minHeight: '' }}>
-      <Sider width={200} className="site-layout-background">
+      {/* <Sider width={200} className="site-layout-background">
         <Menu
           mode="inline"
           defaultSelectedKeys={['1']}
@@ -19,11 +19,11 @@ const Dashboard = () => {
           <Menu.Item key="3" icon={<NotificationOutlined />}>Notifications</Menu.Item>
           <Menu.Item key="4" icon={<SettingFilled/>}>Setting</Menu.Item>
         </Menu>
-      </Sider>  
+      </Sider>   */}
       <Layout style={{ padding: '0 24px 24px' }}>
-        <Header className="site-layout-background" style={{ padding: 0 }}>
+        {/* <Header className="site-layout-background" style={{ padding: 0 }}>
           <h2 style={{ color: 'white', paddingLeft: '20px' }}>My Dashboard</h2>
-        </Header>
+        </Header> */}
         <Content
           style={{
             padding: 24,
@@ -35,6 +35,7 @@ const Dashboard = () => {
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
           </Breadcrumb>
+          <Segmented options={[123, 456, 'longtext-longtext-longtext-longtext', 'Next view', 'location']} block />
           
           <Row gutter={16}>
             <Col span={8}>
