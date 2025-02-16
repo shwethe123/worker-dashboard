@@ -21,7 +21,7 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
       const subKey = index * 4 + j + 1;
       return {
         key: subKey,
-        label: subKey === 1 ? "Overview" : subKey === 2 ? "ဆိုင်(၁)" : `option${subKey}`,
+        label: subKey === 1 ? "Overview" : subKey === 2 ? "Worker List" : subKey === 3 ? 'User Info' : `option${subKey}`,
       };
     }),
   };
@@ -109,7 +109,7 @@ const App = () => {
           /> */}
           <Content
             style={{
-              padding: 24,
+              // padding: 24,
               margin: 0,
               minHeight: 280,
               background: colorBgContainer,
