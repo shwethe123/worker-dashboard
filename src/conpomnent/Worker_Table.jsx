@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, Space, Tag, Spin, Alert } from 'antd';
 
 const columns = [

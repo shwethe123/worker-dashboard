@@ -1,128 +1,135 @@
-import React, { useState } from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  DesktopOutlined,
+  FileOutlined,
+  PieChartOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import Dashboard from './conpomnent/Dashboard';
-import TestTable from "./conpomnent/Test_table";
+import { useState } from 'react';
+import Dashboard from './pages/over_view/OverView';
+import WorkerTable from './conpomnent/Worker_Table';
+import FormPicker from './pages/FormPicker/FormPicker';
+import { PureContent } from 'antd/es/message/PurePanel';
+// import Fixer from './pages/Fixer/Fixer';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 
-const items1 = ['1', '2', '3'].map((key) => ({
-  key,
-  label: `nav ${key}`,
-}));
-
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  const key = String(index + 1);
+function getItem(label, key, icon, children) {
   return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1;
-      return {
-        key: subKey,
-        label: `option${subKey}`,
-      };
-    }),
+    key,
+    icon,
+    children,
+    label,
   };
-});
+}
+
+const items = [
+  getItem('OverView', '1', <PieChartOutlined />),
+  getItem('Option 2', '2', <DesktopOutlined />),
+  getItem('User', 'sub1', <UserOutlined />, [
+    getItem('User List', '3'),
+    getItem('Form Picker', '4'),
+    getItem('Bill', '5'),
+    getItem('Alex', '6'),
+  ]),
+  getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '7'), getItem('Team 2', '9')]),
+  getItem('Files', '10', <FileOutlined />),
+];
 
 const App = () => {
-  const [selectedContent, setSelectedContent] = useState('Content 1'); // State to track content
-
+  const [collapsed, setCollapsed] = useState(false);
+  const [selectedContent, setSelectedContent] = useState('1'); // Default to 'Option 1'
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  // Function to handle menu item click and update the content
   const handleMenuClick = (e) => {
-    if (e.key === '1') {
-      setSelectedContent('Content 1');
-    } else if (e.key === '2') {
-      setSelectedContent('Content 2');
-    } else if (e.key === '3') {
-      setSelectedContent('Content 3');
+    setSelectedContent(e.key); // Update the selected content key
+  };
+
+  // Function to get the breadcrumb items based on the selected key
+  const getBreadcrumbItems = () => {
+    const findItem = (items, key) => {
+      for (const item of items) {
+        if (item.key === key) {
+          return item;
+        }
+        if (item.children) {
+          const found = findItem(item.children, key);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const selectedItem = findItem(items, selectedContent);
+    if (!selectedItem) return [<Breadcrumb.Item key="home">Home</Breadcrumb.Item>];
+
+    const breadcrumbItems = [<Breadcrumb.Item key="home">Home</Breadcrumb.Item>];
+    if (selectedItem) {
+      breadcrumbItems.push(<Breadcrumb.Item key={selectedItem.key}>{selectedItem.label}</Breadcrumb.Item>);
+    }
+
+    return breadcrumbItems;
+  };
+
+  // Function to render the content based on the selected key
+  const renderContent = () => {
+    switch (selectedContent) {
+      case '1':
+        return <Dashboard />;
+      case '2':
+        return <div>Content for Option 2</div>;
+      case '3':
+        return <WorkerTable/>;
+      case '4':
+        return <FormPicker/>;
+      case '5':
+        return <div>Content for Alex</div>;
+      case '6':
+        return <div>Content for Team 1</div>;
+      case '8':
+        return <div>Content for Team 2</div>;
+      case '9':
+        return <div>Content for Files</div>;
+      default:
+        return <div>Default Content</div>;
     }
   };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div className="demo-logo" />
+      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+        <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['2']}
-          items={items1}
-          onClick={handleMenuClick} // Handle clicks here
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
+          onClick={handleMenuClick}
+          defaultSelectedKeys={['1']}
+          mode="inline"
+          items={items}
         />
-      </Header>
-      <Layout>
-        <Sider
-          width={200}
-          style={{
-            background: colorBgContainer,
-          }}
-        >
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            onClick={handleMenuClick} // Handle clicks here
-            style={{
-              height: '100%',
-              borderRight: 0,
-            }}
-            items={items2}
-          />
-        </Sider>
-        <Layout
-          style={{
-            padding: '0 24px 24px',
-            height: '100%',
-          }}
-        >
-          <Breadcrumb
-            items={[
-              {
-                title: <a href="/home">Home</a>,
-              },
-              {
-                title: <a href="/list">List</a>,
-              },
-              {
-                title: <a href="/app">App</a>,
-              },
-            ]}
-            style={{
-              margin: '16px 0',
-            }}
-          />
-          <Content
+      </Sider>
+      <Layout className='h-screen overflow-auto'>
+        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <PureContent style={{ margin: '0 16px' }}>
+          <Breadcrumb style={{ margin: '16px 0' }}>
+            {getBreadcrumbItems()}
+          </Breadcrumb>
+          <div
             style={{
               padding: 24,
-              margin: 0,
-              minHeight: 280,
+              minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
-              height: '100%',
             }}
           >
-            {/* Display content based on the selected option */}
-            {selectedContent === 'Content 1' && <div><Dashboard/></div>}
-            {selectedContent === 'Content 2' && <div><TestTable/></div>}
-            {selectedContent === 'Content 3' && <div>Content 3</div>}
-          </Content>
-        </Layout>
+            {renderContent()}
+          </div>
+        </PureContent>
+        <Footer style={{ textAlign: 'center' }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
       </Layout>
     </Layout>
   );
