@@ -11,6 +11,7 @@ import Dashboard from './pages/over_view/OverView';
 import WorkerTable from './conpomnent/Worker_Table';
 import FormPicker from './pages/FormPicker/FormPicker';
 import { PureContent } from 'antd/es/message/PurePanel';
+import DataAnalyst from './pages/DataAnalyst/DataAnalyst';
 // import Fixer from './pages/Fixer/Fixer';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -25,10 +26,10 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-  getItem('OverView', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('User List', '3'),
+  getItem('Data Analyst', '1', <PieChartOutlined />),
+  getItem('OverView 2', '2', <DesktopOutlined />),
+  getItem('Worker', 'sub1', <UserOutlined />, [
+    getItem('Worker List', '3'),
     getItem('Form Picker', '4'),
     getItem('Bill', '5'),
     getItem('Alex', '6'),
@@ -78,9 +79,9 @@ const App = () => {
   const renderContent = () => {
     switch (selectedContent) {
       case '1':
-        return <Dashboard />;
+        return <DataAnalyst />;
       case '2':
-        return <div>Content for Option 2</div>;
+        return <div><Dashboard /></div>;
       case '3':
         return <WorkerTable/>;
       case '4':
@@ -101,7 +102,8 @@ const App = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className="demo-logo-vertical" />
+        <div className="flex justify-center py-3 demo-logo-vertical border-b-2">
+           <h1 className='text-3xl text-white font-extrabold'>Dash</h1> </div>
         <Menu
           theme="dark"
           onClick={handleMenuClick}
@@ -111,7 +113,7 @@ const App = () => {
         />
       </Sider>
       <Layout className='h-screen overflow-auto'>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header style={{ padding: 0,}} />
         <PureContent style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
             {getBreadcrumbItems()}

@@ -1,12 +1,14 @@
 
 import { Layout, Card, Statistic, Row, Col, Button, DatePicker, Flex, Progress, Typography, Slider } from 'antd';
 import { UserOutlined} from '@ant-design/icons';
-import List from './List';
+import React from 'react';
 
 const { Content } = Layout;
 const { RangePicker } = DatePicker;
 
 const Dashboard = () => {
+  const [stepsCount, setStepsCount] = React.useState(5);
+  const [stepsGap, setStepsGap] = React.useState(7);
   return (
       <Layout style={{}}>
         <Content
@@ -50,8 +52,43 @@ const Dashboard = () => {
             </Col>
           </Row>
           <div className='mt-5 mb-5 bg-white'>
-                <div className=''>
-                  <List/>
+            <div>
+              <Typography.Title level={5}>Custom count:</Typography.Title>
+              <Slider min={2} max={10} value={stepsCount} onChange={setStepsCount} />
+              <Typography.Title level={5}>Custom gap:</Typography.Title>
+              <Slider step={4} min={0} max={40} value={stepsGap} onChange={setStepsGap} />
+              <Flex
+                wrap
+                gap="middle"
+                style={{
+                  marginTop: 16,
+                }}
+              >
+                <Progress
+                  type="dashboard"
+                  steps={8}
+                  percent={50}
+                  trailColor="rgba(0, 0, 0, 0.06)"
+                  strokeWidth={20}
+                />
+                <Progress
+                  type="circle"
+                  percent={100}
+                  steps={{
+                    count: stepsCount,
+                    gap: stepsGap,
+                  }}
+                  trailColor="rgba(0, 0, 0, 0.06)"
+                  strokeWidth={20}
+                />
+              </Flex>
+            </div>
+                <div>
+                <Flex gap="small" wrap>
+                  <Progress type="circle" percent={75} />
+                  <Progress type="circle" percent={70} status="exception" />
+                  <Progress type="circle" percent={100} />
+                </Flex>
                 </div>
           </div>
           

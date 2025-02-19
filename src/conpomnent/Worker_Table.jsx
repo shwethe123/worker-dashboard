@@ -3,25 +3,25 @@ import { Table, Space, Tag, Spin, Alert } from 'antd';
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'Name',
+    title: 'name',
+    dataIndex: 'name',
     key: 'name',
     render: (text) => <a>{text}</a>,
   },
   {
-    title: 'Phone',
-    dataIndex: 'Phone',
+    title: 'phone',
+    dataIndex: 'phone',
     key: 'phone',
   },
   {
-    title: 'Selection',
-    dataIndex: 'selection',
-    key: 'selection',
+    title: 'id',
+    dataIndex: 'id',
+    key: 'id',
   },
   {
-    title: 'Condition',
+    title: 'condition',
     dataIndex: 'condition',
-    key: 'Condition',
+    key: 'condition',
     render: (_, { condition }) => (
       <span className={condition === "Normal" ? 'text-gray-800' :
         condition === "အလုပ်နောက်ကျ" ? 'text-orange-300' : condition === "ခွင့်တစ်ပိုင်း" ? 'text-green-300' :
@@ -75,7 +75,7 @@ const App = () => {
       try {
         setLoading(true);
 
-        const response = await fetch(`https://dashboard-yfuz.onrender.com/api/dashboard`);
+        const response = await fetch(`http://localhost:3000/api/worker_list`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

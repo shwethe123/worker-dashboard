@@ -19,9 +19,9 @@ const App = () => {
       <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
         New form
       </Button>
-      <div className='mt-5 h-1/4 overflow-auto'>
+      <div className='mt-5'>
         <UserCard/>
-        <UserCard/>
+        {/* <UserCard/> */}
       </div>
       <Drawer
         title="Create a new account"
