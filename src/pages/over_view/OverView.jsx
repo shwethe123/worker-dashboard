@@ -2,6 +2,7 @@
 import { Layout, Card, Statistic, Row, Col, Button, DatePicker, Flex, Progress, Typography, Slider } from 'antd';
 import { UserOutlined} from '@ant-design/icons';
 import List from './List';
+import CreateForm from '../Create/Create'
 
 const { Content } = Layout;
 const { RangePicker } = DatePicker;
@@ -67,6 +68,7 @@ const Dashboard = () => {
               </Card>
             </Col>
           </Row>
+          <CreateForm/>
         </Content>
       </Layout>
   );

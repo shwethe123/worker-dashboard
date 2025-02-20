@@ -1,40 +1,32 @@
 import { useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Flex, Modal } from 'antd';
+import FormCreate from './Model'
+
 const App = () => {
   const [open, setOpen] = useState(false);
-  const showModal = () => {
-    setOpen(true);
-  };
-  const handleOk = (e) => {
-    console.log(e);
-    setOpen(false);
-  };
-  const handleCancel = (e) => {
-    console.log(e);
-    setOpen(false);
-  };
   return (
-    <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal with customized button props
+    <Flex vertical gap="middle" align="flex-start">
+      <Button type="primary" onClick={() => setOpen(true)}>
+        Create
       </Button>
       <Modal
-        title="Basic Modal"
+        title="Modal 1000px width"
+        centered
         open={open}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okButtonProps={{
-          disabled: true,
-        }}
-        cancelButtonProps={{
-          disabled: true,
-        }}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+        width={1000}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <div className='flex justify-between'>
+          <div>
+            <p>Hello</p>
+          </div>
+          <div>
+            <FormCreate setOpen={setOpen}/>
+          </div>
+        </div>
       </Modal>
-    </>
+    </Flex>
   );
 };
 export default App;
