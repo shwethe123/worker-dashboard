@@ -1,32 +1,44 @@
-import { useState } from 'react';
-import { Button, Flex, Modal } from 'antd';
-import FormCreate from './Model'
+import React, { useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Drawer, Select, Space } from 'antd';
+import FormCreate from './Model';
 
+const { Option } = Select;
 const App = () => {
   const [open, setOpen] = useState(false);
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
   return (
-    <Flex vertical gap="middle" align="flex-start">
-      <Button type="primary" onClick={() => setOpen(true)}>
-        Create
+    <>
+      <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
+        New account
       </Button>
-      <Modal
-        title="Modal 1000px width"
-        centered
+      <Drawer
+        title="Create a new account"
+        width={720}
+        onClose={onClose}
         open={open}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
-        width={1000}
+        styles={{
+          body: {
+            paddingBottom: 80,
+          },
+        }}
+        extra={
+          <Space>
+            {/* <Button onClick={onClose}>Cancel</Button> */}
+            {/* <Button onClick={onClose} type="primary">
+              Submit
+            </Button> */}
+          </Space>
+        }
       >
-        <div className='flex justify-between'>
-          <div>
-            <p>Hello</p>
-          </div>
-          <div>
-            <FormCreate setOpen={setOpen}/>
-          </div>
-        </div>
-      </Modal>
-    </Flex>
+        <FormCreate onClose={onClose}/>
+      </Drawer>
+    </>
   );
 };
 export default App;

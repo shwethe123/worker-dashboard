@@ -1,12 +1,55 @@
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, message, Row, Select, Space } from 'antd';
 import UserCard from './UserCard';
 import AutoComplate from './AutoComplete'
+import axios from 'axios';
 
 const { Option } = Select;
 const App = () => {
+  const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const onFinish = async(values) => {
+    setLoading(true);
+    try {
+      const formattedValues = {
+        ...values,
+      };
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      Object.keys(formattedValues).forEach((key) => {
+        formData.append(key, formattedValues[key]);
+      });
+
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      };
+      const response = await axios.post("http://localhost:3000/api/worker_list", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 200 || response.status === 201) {
+        message.success("Worker created successfully!");
+        form.resetFields();
+      } else {
+        throw new Error("Failed to create worker");
+      };
+    } catch (error) {
+      console.error("Error", error);
+      message.error("Failed to create Worker!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onFinishFailed =(errorInfo) => {
+    console.log("Failed", errorInfo);
+    message.error("Please fill out all required fields!");
+  }
+
   const showDrawer = () => {
     setOpen(true);
   };
@@ -42,7 +85,7 @@ const App = () => {
           </Space>
         }
       >
-        <Form layout="vertical" hideRequiredMark>
+        <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} layout="vertical" hideRequiredMark>
           <div className='mb-5'>
             <AutoComplate/>
           </div>

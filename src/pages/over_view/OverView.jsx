@@ -50,11 +50,14 @@ const Dashboard = () => {
               </Card>
             </Col>
           </Row>
-          <div className='mt-5 mb-5 bg-white'>
-                <div className=''>
-                  <List/>
-                </div>
-          </div>
+          <Row gutter={16} className='mt-5 mb-5 bg-white'>
+            <Col span={12}>
+              <List/>
+            </Col>
+            <Col span={12}>
+              <List/> 
+            </Col>
+          </Row>
           
           <Row gutter={16} style={{ marginTop: '16px' }}>
             <Col span={12}>

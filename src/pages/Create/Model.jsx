@@ -7,44 +7,46 @@ import "antd/dist/reset.css";
 const { Option } = Select;
 const { TextArea } = Input;
 
-const WorkerCreateForm = ({ setOpen }) => {
+const WorkerCreateForm = ({ onClose }) => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [imageFile, setImageFile] = useState(null); // State to store the uploaded image file
+  const [fileList, setFileList] = useState([]);
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      // Format the time field to a string
       const formattedValues = {
         ...values,
-        time: values.time.format("YYYY-MM-DD HH:mm:ss"), // Format date to string
+        time: values.time.format("YYYY-MM-DD HH:mm:ss"),
       };
-  
-      // Create a FormData object to send the image file along with other form data
+
       const formData = new FormData();
-      formData.append("image", imageFile); // Append the image file
       Object.keys(formattedValues).forEach((key) => {
         formData.append(key, formattedValues[key]);
       });
-  
+
+      // Append the profile picture file to the formData
+      if (fileList.length > 0) {
+        formData.append("profilePicture", fileList[0].originFileObj);
+      }
+
       // Log formData content
       for (let [key, value] of formData.entries()) {
         console.log(key, value);
       }
-  
-      // Send data to the API
+
       const response = await axios.post("http://localhost:3000/api/worker_list", formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Set the content type for file upload
+          "Content-Type": "multipart/form-data",
         },
       });
-  
-      // Check if the request was successful
+
       if (response.status === 200 || response.status === 201) {
         message.success("Worker created successfully!");
         form.resetFields();
-        setOpen(false); // Close the modal after successful creation
+        setFileList([]); // Clear the file list after successful submission
+        onClose(false);
       } else {
         throw new Error("Failed to create worker");
       }
@@ -59,20 +61,19 @@ const WorkerCreateForm = ({ setOpen }) => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
     message.error("Please fill out all required fields!");
+    messageApi.open({
+      type: 'error',
+      content: 'This is an error message',
+    });
   };
 
-  // Handle image file change
-  const handleImageChange = (info) => {
-    if (info.file.status === "done") {
-      setImageFile(info.file.originFileObj); // Store the uploaded file
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
+  const handleFileChange = ({ fileList }) => {
+    setFileList(fileList);
   };
 
   return (
     <div className="flex items-center justify-center">
+      {contextHolder}
       <div className="bg-white p-8 rounded-lg w-full max-w-2xl">
         <h1 className="text-2xl font-bold mb-6 text-center">Create Worker</h1>
         <Form
@@ -184,20 +185,19 @@ const WorkerCreateForm = ({ setOpen }) => {
             <TextArea rows={4} placeholder="Enter reason" className="w-full" />
           </Form.Item>
 
-          {/* Image Upload Field */}
           <Form.Item
-            label="Upload Image"
-            name="image"
-            rules={[{ required: true, message: "Please upload an image!" }]}
+            label="Profile Picture"
+            name="profilePicture"
+            rules={[{ required: true, message: "Please upload a profile picture!" }]}
           >
             <Upload
-              name="image"
-              listType="picture"
+              fileList={fileList}
+              onChange={handleFileChange}
               beforeUpload={() => false} // Prevent automatic upload
-              onChange={handleImageChange} // Handle file change
+              listType="picture"
               maxCount={1} // Allow only one file to be uploaded
             >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              <Button icon={<UploadOutlined />}>Upload Profile Picture</Button>
             </Upload>
           </Form.Item>
 
