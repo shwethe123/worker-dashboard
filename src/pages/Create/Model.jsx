@@ -28,7 +28,7 @@ const WorkerCreateForm = ({ onClose }) => {
 
       // Append the profile picture file to the formData
       if (fileList.length > 0) {
-        formData.append("profilePicture", fileList[0].originFileObj);
+        formData.append("profile", fileList[0].originFileObj);
       }
 
       // Log formData content
@@ -43,7 +43,11 @@ const WorkerCreateForm = ({ onClose }) => {
       });
 
       if (response.status === 200 || response.status === 201) {
-        message.success("Worker created successfully!");
+        // message.success("Worker created successfully!");
+        messageApi.open({
+          type: 'success',
+          content: "Worker created successfully!",
+        });
         form.resetFields();
         setFileList([]); // Clear the file list after successful submission
         onClose(false);
@@ -52,7 +56,11 @@ const WorkerCreateForm = ({ onClose }) => {
       }
     } catch (error) {
       console.error("Error:", error);
-      message.error("Failed to create worker!");
+      // message.error("Failed to create worker!");
+      messageApi.open({
+        type: 'error',
+        content: "Failed to create worker!",
+      });
     } finally {
       setLoading(false);
     }
@@ -187,7 +195,7 @@ const WorkerCreateForm = ({ onClose }) => {
 
           <Form.Item
             label="Profile Picture"
-            name="profilePicture"
+            name="profile"
             rules={[{ required: true, message: "Please upload a profile picture!" }]}
           >
             <Upload

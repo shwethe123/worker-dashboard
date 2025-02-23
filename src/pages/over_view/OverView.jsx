@@ -2,16 +2,15 @@
 import { Layout, Card, Statistic, Row, Col, Button, DatePicker, Flex, Progress, Typography, Slider } from 'antd';
 import { UserOutlined} from '@ant-design/icons';
 import List from './List';
-import CreateForm from '../Create/Create'
 
 const { Content } = Layout;
 const { RangePicker } = DatePicker;
 
 const Dashboard = () => {
   return (
-      <Layout style={{}}>
+      <Layout className='bg-gray-50' style={{}}>
         <Content
-        className='pt-5'
+        // className='pt-5'
           style={{
             // padding: 24,
             margin: 0,
@@ -50,7 +49,7 @@ const Dashboard = () => {
               </Card>
             </Col>
           </Row>
-          <Row gutter={16} className='mt-5 mb-5 bg-white'>
+          <Row gutter={16} className='mt-5 mb-5'>
             <Col span={12}>
               <List/>
             </Col>
@@ -71,7 +70,6 @@ const Dashboard = () => {
               </Card>
             </Col>
           </Row>
-          <CreateForm/>
         </Content>
       </Layout>
   );

@@ -102,9 +102,11 @@ const App = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className="flex justify-center py-3 demo-logo-vertical border-b-2">
-           <h1 className='text-3xl text-white font-extrabold'>Dash</h1> </div>
+        <div className="flex justify-center py-1 demo-logo-vertical">
+           <h1 className='text-3xl mt-5 text-white font-extrabold'>Dash</h1>
+        </div>
         <Menu
+        className='mt-4'
           theme="dark"
           onClick={handleMenuClick}
           defaultSelectedKeys={['1']}
@@ -113,16 +115,26 @@ const App = () => {
         />
       </Sider>
       <Layout className='h-screen overflow-auto'>
-        <Header style={{ padding: 0,}} />
-        <PureContent style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            {getBreadcrumbItems()}
+        {/* <Header style={{ padding: 0,}} title='Dashobard' /> */}
+        <PureContent style={{ margin: '0 0px' }}>
+          <Breadcrumb
+              className="bg-gray-50 shadow-sm"
+              style={{
+                padding: '20px 10px',
+                position: 'sticky',   // Make the breadcrumb sticky
+                top: 0,               // Stick it to the top of the viewport
+                zIndex: 100,          // Ensure it stays above other content
+                backgroundColor: 'white',  // Optional, set background to ensure readability
+              }}
+            >
+              {getBreadcrumbItems()}
           </Breadcrumb>
           <div
+          className='bg-gray-50'
             style={{
-              padding: 24,
+              padding: 20,
               minHeight: 360,
-              background: colorBgContainer,
+              // background: colorBgContainer,
               borderRadius: borderRadiusLG,
             }}
           >

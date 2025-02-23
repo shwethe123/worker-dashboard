@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Col, Divider, Drawer, List, Row, Pagination } from 'antd';
 import { AntDesignOutlined } from '@ant-design/icons';
+import CreateForm from '../Create/Create'
 
 const DescriptionItem = ({ title, content }) => (
   <div className="site-description-item-profile-wrapper">
@@ -53,62 +54,76 @@ const App = () => {
 
   return (
     <>
-      <List
-        dataSource={paginatedData} 
-        bordered
-        renderItem={item => (
-          <List.Item
-            key={item.id}
-            actions={[
-              <a onClick={() => showDrawer(item)} key={`a-${item.id}`}>
-                View Profile
-              </a>,
-            ]}
-          >
-            <List.Item.Meta
-              avatar={
-                <Avatar src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png" />
-              }
+      <div className=' bg-white p-2 rounded-lg shadow-lg'>
+        <div className='flex text-xl font-bold justify-between ml-10 mr-5 mt-2'>
+            <h1>Worker List</h1>
+            
+          <CreateForm/>
+        </div>
+        <List
+        className='border-none m-4'
+          dataSource={paginatedData} 
+          bordered
+          renderItem={item => (
+            <List.Item
+              key={item.id}
+              actions={[
+                <a className='text-blue-500' onClick={() => showDrawer(item)} key={`a-${item.id}`}>
+                  View Profile
+                </a>,
+              ]}
+            >
+              <List.Item.Meta
+                avatar={
+                  <Avatar src={item.profile} alt="Profile" width="50" height="50"  />
+                }
 
-              
-              
-              title={<a href="https://ant.design/index-cn">{item.name}</a>}
-              description={item.id}
-            />
-          </List.Item>
-        )}
-      />
-
+                
+                
+                title={<a href="https://ant.design/index-cn">{item.name}</a>}
+                description={item.id}
+              />
+            </List.Item>
+          )}
+        />
+        
       <Pagination
+        className='m-4'
         current={currentPage}
         pageSize={pageSize}
         total={data.length}
         onChange={handlePageChange}
         style={{ marginTop: 16 }}
       />
+    </div>
 
-      <Drawer width={640} placement="right" closable={false} onClose={onClose} open={open}>
+    <Drawer width={640} placement="right" closable={false} onClose={onClose} open={open}>
         {selectedWorker ? (
           <>
-            <p className="site-description-item-profile-p font-bold text-2xl" style={{ marginBottom: 24 }}>
-              Worker Profile
-            </p>
-            <img src={`http://localhost:5000/${selectedWorker.profilePicture}`} alt={selectedWorker.name} width="100" />
-            <p className="site-description-item-profile-p font-bold text-xl text-gray-500">Personal</p>
+            <div className="flex justify-center mb-8">
+              <Avatar src={selectedWorker.profile} size={120} className="border-4 border-blue-500" />
+              <img src={selectedWorker.profile} alt="" />
+            </div>
+            <p className="text-3xl font-bold text-center text-blue-600">{selectedWorker.name}</p>
+            <p className="text-xl text-center text-gray-500 mb-6">{selectedWorker.position}</p>
+
+            <Divider />
+
+            <p className="font-semibold text-lg text-gray-700">Personal Information</p>
             <Row>
               <Col span={12}>
                 <DescriptionItem title="Full Name" content={selectedWorker.name} />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="Account" content={selectedWorker.id} />
+                <DescriptionItem title="Account ID" content={selectedWorker.id} />
               </Col>
             </Row>
             <Row>
               <Col span={12}>
-                <DescriptionItem title="City" content={selectedWorker.condition} />
+                <DescriptionItem title="City" content={selectedWorker.city} />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="Country" content={selectedWorker.time} />
+                <DescriptionItem title="Country" content={selectedWorker.country} />
               </Col>
             </Row>
             <Row>
@@ -116,19 +131,18 @@ const App = () => {
                 <DescriptionItem title="Birthday" content={selectedWorker.birthday} />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="Website" content={selectedWorker.website || "-"} />
+                <DescriptionItem title="Website" content={selectedWorker.website || "N/A"} />
               </Col>
             </Row>
             <Row>
               <Col span={24}>
-                <DescriptionItem
-                  title="Message"
-                  content={selectedWorker.message || "No message provided"}
-                />
+                <DescriptionItem title="Message" content={selectedWorker.message || "No message provided"} />
               </Col>
             </Row>
+
             <Divider />
-            <p className="site-description-item-profile-p">Company</p>
+
+            <p className="font-semibold text-lg text-gray-700">Company Information</p>
             <Row>
               <Col span={12}>
                 <DescriptionItem title="Position" content={selectedWorker.position} />
@@ -150,8 +164,10 @@ const App = () => {
                 <DescriptionItem title="Skills" content={selectedWorker.skills} />
               </Col>
             </Row>
+
             <Divider />
-            <p className="site-description-item-profile-p">Contacts</p>
+
+            <p className="font-semibold text-lg text-gray-700">Contact Information</p>
             <Row>
               <Col span={12}>
                 <DescriptionItem title="Email" content={selectedWorker.email} />
@@ -162,10 +178,11 @@ const App = () => {
             </Row>
             <Row>
               <Col span={24}>
-                <DescriptionItem title="Github" content={<a href={selectedWorker.github} target="_blank" rel="noreferrer">{selectedWorker.github}</a>} />
+                <DescriptionItem title="Github" content={<a href={selectedWorker.github} target="_blank" rel="noreferrer" className="text-blue-600">{selectedWorker.github}</a>} />
               </Col>
             </Row>
-            <Button type="primary" size="large" icon={<AntDesignOutlined />}>
+
+            <Button type="primary" size="large" icon={<AntDesignOutlined />} className="mt-6 w-full">
               Card Print
             </Button>
           </>
