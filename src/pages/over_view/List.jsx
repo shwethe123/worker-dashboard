@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Col, Divider, Drawer, List, Row, Pagination } from 'antd';
 import { AntDesignOutlined } from '@ant-design/icons';
-import CreateForm from '../Create/Create'
+import CreateForm from '../Create/Create';
+import { Flex, Progress } from 'antd';
 
 const DescriptionItem = ({ title, content }) => (
   <div className="site-description-item-profile-wrapper">
@@ -16,6 +17,7 @@ const App = () => {
   const [selectedWorker, setSelectedWorker] = useState(null); 
   const [currentPage, setCurrentPage] = useState(1); 
   const [pageSize] = useState(5);  // Set page size for pagination
+  const [imageOpen, setImageOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,12 +47,37 @@ const App = () => {
     setSelectedWorker(null); 
   };
 
+  const current_date = data.map((item) => {
+    const itemDate = new Date(item.time).getTime(); // Convert item.createdAt to a valid timestamp
+    const months = !isNaN(itemDate)
+      ? (new Date().getTime() - itemDate) / (1000 * 60 * 60 * 24 * 30.44) // Convert milliseconds to months
+      : null;
+  
+    return months; // Return months or null if invalid
+  });
+  
+  // Normalize the months to a percentage of a maximum value (e.g., 120 months = 10 years)
+  const getProgressPercentage = (months) => {
+    const maxMonths = 120; // Maximum number of months (e.g., 10 years)
+    const percentage = months ? (months / maxMonths) * 100 : 0;
+    return Math.round(percentage); // Round the percentage to an integer
+  };
+  
+  // Map to get progress percentages as integers
+  const progressPercentages = current_date.map(months => getProgressPercentage(months));
+  
+  
+
   // Pagination logic: Get the current page data
   const paginatedData = data.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handlePageChange = (page) => {
     setCurrentPage(page); 
   };
+
+  const clickImage = () => {
+    setImageOpen(!imageOpen);
+  }
 
   return (
     <>
@@ -61,32 +88,54 @@ const App = () => {
           <CreateForm/>
         </div>
         <List
-        className='border-none m-4'
-          dataSource={paginatedData} 
-          bordered
-          renderItem={item => (
-            <List.Item
-              key={item.id}
-              actions={[
-                <a className='text-blue-500' onClick={() => showDrawer(item)} key={`a-${item.id}`}>
-                  View Profile
-                </a>,
-              ]}
-            >
-              <List.Item.Meta
-                avatar={
-                  <Avatar src={item.profile} alt="Profile" width="50" height="50"  />
-                }
+            className='border-none m-4'
+            dataSource={paginatedData} 
+            bordered
+            renderItem={(item, index) => (
+        <List.Item
+          key={item.id}
+          actions={[
+            <a className='text-blue-500' onClick={() => showDrawer(item)} key={`a-${item.id}`}>
+              View Profile
+            </a>,
+          ]}
+        >
+          <List.Item.Meta
+            avatar={
+              <Avatar className='border-2 border-blue-500' src={item.profile} alt="Profile" width="50" height="50"  />
+            }
+            title={<a href="https://ant.design/index-cn">{item.name}</a>}
+          />
 
-                
-                
-                title={<a href="https://ant.design/index-cn">{item.name}</a>}
-                description={item.id}
-              />
-            </List.Item>
-          )}
-        />
-        
+          <List.Item.Meta 
+            description={
+              <span className={item.id === "132" ? 'text-green-500' : 'text-gray-500'}> 
+                {item.id}
+              </span> //ဒီနမူနာက အရမ်း အရေးကြီး
+            } 
+          />
+
+
+          <Flex vertical gap="small" style={{ width: 180 }}>
+            <Progress
+              percent={progressPercentages[index]} // Use progress percentage for each worker
+              size="small"
+              status={
+                progressPercentages[index] >= 100
+                  ? "success"
+                  : progressPercentages[index] >= 1
+                  ? "active"
+                  : item.condition === "အလုပ်ထွက်"
+                  ? "exception"
+                  : "exception" // Default exception if no specific condition
+              }
+            />
+          </Flex>
+    </List.Item>
+  )}
+/>
+
+
       <Pagination
         className='m-4'
         current={currentPage}
@@ -101,8 +150,9 @@ const App = () => {
         {selectedWorker ? (
           <>
             <div className="flex justify-center mb-8">
-              <Avatar src={selectedWorker.profile} size={120} className="border-4 border-blue-500" />
-              <img src={selectedWorker.profile} alt="" />
+              
+              {imageOpen ? <img onClick={clickImage} src={selectedWorker.profile} alt="Profile" /> :
+              <Avatar onClick={clickImage} src={selectedWorker.profile} size={120} className="border-4 border-blue-500" />}
             </div>
             <p className="text-3xl font-bold text-center text-blue-600">{selectedWorker.name}</p>
             <p className="text-xl text-center text-gray-500 mb-6">{selectedWorker.position}</p>

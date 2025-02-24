@@ -12,6 +12,7 @@ import WorkerTable from './conpomnent/Worker_Table';
 import FormPicker from './pages/FormPicker/FormPicker';
 import { PureContent } from 'antd/es/message/PurePanel';
 import DataAnalyst from './pages/DataAnalyst/DataAnalyst';
+// import Test_fetch from './conpomnent/Test_fetch'
 // import Fixer from './pages/Fixer/Fixer';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -87,7 +88,7 @@ const App = () => {
       case '4':
         return <FormPicker/>;
       case '5':
-        return <div>Content for Alex</div>;
+        return <div></div>;
       case '6':
         return <div>Content for Team 1</div>;
       case '8':

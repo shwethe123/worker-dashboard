@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ApexCharts from 'react-apexcharts';
 
+// Function to generate dummy time series data (replace this with your actual data)
 const generateDayWiseTimeSeries = (baseval, count, yrange) => {
   let i = 0;
   let series = [];
@@ -15,36 +16,33 @@ const generateDayWiseTimeSeries = (baseval, count, yrange) => {
 };
 
 const Chart = () => {
-  const [chartData, setChartData] = useState({
-    series: [],
-    options: {},
-  });
+  const [chartData, setChartData] = useState({});
 
   useEffect(() => {
-    // Set the chart options and data
+    // Setup chart options and series data
     const options = {
       series: [
         {
           name: 'South',
           data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 20, {
             min: 10,
-            max: 60,
-          }),
+            max: 60
+          })
         },
         {
           name: 'North',
           data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 20, {
             min: 10,
-            max: 20,
-          }),
+            max: 20
+          })
         },
         {
           name: 'Central',
           data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 20, {
             min: 10,
-            max: 15,
-          }),
-        },
+            max: 15
+          })
+        }
       ],
       chart: {
         type: 'area',
@@ -52,38 +50,34 @@ const Chart = () => {
         stacked: true,
         events: {
           selection: function (chart, e) {
-            console.log(new Date(e.xaxis.min)); // Log the selected range on the chart
-          },
-        },
+            console.log(new Date(e.xaxis.min)); // Log selected range on chart
+          }
+        }
       },
       colors: ['#008FFB', '#00E396', '#CED4DC'],
       dataLabels: {
-        enabled: false,
+        enabled: false
       },
       stroke: {
-        curve: 'monotoneCubic',
+        curve: 'monotoneCubic'
       },
       fill: {
         type: 'gradient',
         gradient: {
           opacityFrom: 0.6,
-          opacityTo: 0.8,
-        },
+          opacityTo: 0.8
+        }
       },
       legend: {
         position: 'top',
-        horizontalAlign: 'left',
+        horizontalAlign: 'left'
       },
       xaxis: {
-        type: 'datetime',
-      },
+        type: 'datetime'
+      }
     };
 
-    // Set the state to render the chart
-    setChartData({
-      series: options.series,
-      options: options,
-    });
+    setChartData(options);
   }, []);
 
   return (
@@ -91,7 +85,7 @@ const Chart = () => {
       <h1>Worker Data Chart</h1>
       <div id="chart">
         <ApexCharts
-          options={chartData.options}
+          options={chartData}
           series={chartData.series}
           type="area"
           height={350}
