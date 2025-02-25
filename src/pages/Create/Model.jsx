@@ -126,12 +126,21 @@ const WorkerCreateForm = ({ onClose }) => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Location"
-                name="location"
-                rules={[{ required: true, message: "Please enter the worker location!" }]}
-              >
-                <Input placeholder="Enter worker location" className="w-full" />
-              </Form.Item>
+                  name="Location"
+                  label="Location"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please select an Location',
+                    },
+                  ]}
+                >
+                  <Select placeholder="Please select an Location">
+                    <Option value="ဆိုင်(၁)">ဆိုင်(၁)</Option>
+                    <Option value="ဆိုင်(၂)">ဆိုင်(၂)</Option>
+                    <Option value="ဆိုင်(၃)">ဆိုင်(၃)</Option>
+                  </Select>
+                </Form.Item>
             </Col>
           </Row>
 
@@ -141,10 +150,16 @@ const WorkerCreateForm = ({ onClose }) => {
             rules={[{ required: true, message: "Please select the department!" }]}
           >
             <Select placeholder="Select department" className="w-full">
-              <Option value="IT">IT</Option>
-              <Option value="HR">HR</Option>
-              <Option value="Finance">Finance</Option>
-              <Option value="Operations">Operations</Option>
+              <Option value="Gထွက်">Gထွက်</Option>
+              <Option value="လက်လီ">လက်လီ</Option>
+              <Option value="လက်ကား">လက်ကား</Option>
+              <Option value="ကားအော်ဒါ">ကားအော်ဒါ</Option>
+              <Option value="အဝင်ပိုင်း">အဝင်ပိုင်း</Option>
+              <Option value="ပစ္စည်းမှာ">ပစ္စည်းမှာ</Option>
+              <Option value="အကြွေးကိုင်">အကြွေးကိုင်</Option>
+              <Option value="စက်ကိုင်">စက်ကိုင်</Option>
+              <Option value="အပြင်သွားပိုင်း">အပြင်သွား</Option>
+              <Option value="စီစစ်ရေး">စီစစ်ရေး</Option>
             </Select>
           </Form.Item>
 
@@ -156,7 +171,6 @@ const WorkerCreateForm = ({ onClose }) => {
             <Select placeholder="Select status" className="w-full">
               <Option value="Active">Active</Option>
               <Option value="Inactive">Inactive</Option>
-              <Option value="On Leave">On Leave</Option>
             </Select>
           </Form.Item>
 
@@ -168,9 +182,17 @@ const WorkerCreateForm = ({ onClose }) => {
                 rules={[{ required: true, message: "Please select the condition!" }]}
               >
                 <Select placeholder="Select condition" className="w-full">
-                  <Option value="Good">Good</Option>
-                  <Option value="Average">Average</Option>
-                  <Option value="Poor">Poor</Option>
+                  <Option value="Normal">Normal</Option>
+                  <Option value="ဝန်ထမ်းသစ်">ဝန်ထမ်းသစ်</Option>
+                  <Option value="အလုပ်နောက်ကျ">အလုပ်နောက်ကျ</Option>
+                  <Option value="ခွင့်တစ်ပိုင်း">ခွင့်တစ်ပိုင်း</Option>
+                  <Option value="ခွင့်တစ်ရက်">ခွင့်တစ်ရက်</Option>
+                  <Option value="ခွင့်ရက်ရှည်">ခွင့်ရက်ရှည်</Option>
+                  <Option value="ခွင့်မဲ့">ခွင့်မဲ့</Option>
+                  <Option value="ဖိုင်းအပြစ်ပေး">ဖိုင်းအပြစ်ပေး</Option>
+                  <Option value="အလုပ်ထွက်မည့်သူ">အလုပ်ထွက်မည့်သူ</Option>
+                  <Option value="အလုပ်ထွက်သူ">အလုပ်ထွက်သူ</Option>
+                  <Option value="ကြိုတင်ခွင့်တိုင်သူ">ကြိုတင်ခွင့်တိုင်သူ</Option>
                 </Select>
               </Form.Item>
             </Col>

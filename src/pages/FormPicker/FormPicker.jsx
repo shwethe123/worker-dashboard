@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, message, Row, Select, Space } from 'antd';
+import { useState } from 'react';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Col, DatePicker, Drawer, Form, Input, message, Row, Select, Space, Upload } from 'antd';
 import UserCard from './UserCard';
-import AutoComplate from './AutoComplete'
 import axios from 'axios';
 
 const { Option } = Select;
@@ -11,32 +10,41 @@ const App = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const onFinish = async(values) => {
+  const [fileList, setFileList] = useState([]);
+
+  const handleFileChange = (info) => {
+    const { fileList } = info;
+    setFileList(fileList);
+  };
+
+  const onFinish = async (values) => {
     setLoading(true);
     try {
       const formattedValues = {
         ...values,
       };
       const formData = new FormData();
-      formData.append("image", imageFile);
+      formData.append("image", fileList[0]?.originFileObj);
       Object.keys(formattedValues).forEach((key) => {
         formData.append(key, formattedValues[key]);
       });
-
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      };
-      const response = await axios.post("http://localhost:3000/api/worker_list", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+  
+      const response = await axios.post("http://localhost:3000/api/worker_set", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       if (response.status === 200 || response.status === 201) {
         message.success("Worker created successfully!");
         form.resetFields();
       } else {
         throw new Error("Failed to create worker");
-      };
+      }
+  
+      if (response.status === 200 || response.status === 201) {
+        message.success("Worker created successfully!");
+        form.resetFields();
+      } else {
+        throw new Error("Failed to create worker");
+      }
     } catch (error) {
       console.error("Error", error);
       message.error("Failed to create Worker!");
@@ -67,7 +75,7 @@ const App = () => {
         {/* <UserCard/> */}
       </div>
       <Drawer
-        title="Create a new account"
+        title="ခွင့်တိုင်ဖိုင်"
         width={720}
         onClose={onClose}
         open={open}
@@ -79,15 +87,39 @@ const App = () => {
         extra={
           <Space>
             <Button onClick={onClose}>Cancel</Button>
-            <Button onClick={onClose} type="primary">
-              Submit
-            </Button>
           </Space>
         }
       >
-        <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} layout="vertical" hideRequiredMark>
-          <div className='mb-5'>
-            <AutoComplate/>
+        <Form className='m-4' form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} layout="vertical" hideRequiredMark>
+        <div className='mb-5'>
+          <Row gutter={16}>
+            <Col span={12}>
+                <Form.Item
+                  name="id"
+                  label="AG / AM"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter user AG / AM',
+                    },
+                  ]}
+                >
+                  <Input placeholder="Please enter user AG / AM" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Phone"
+                  name="phone"
+                  rules={[
+                    { required: true, message: "Please enter the worker phone number!" },
+                    { pattern: /^[0-9]+$/, message: "Phone number must be numeric!" },
+                  ]}
+                >
+                  <Input placeholder="Enter worker phone number" className="w-full" />
+                </Form.Item>
+              </Col>
+          </Row>
           </div>
           <Row gutter={16}>
             <Col span={12}>
@@ -106,16 +138,28 @@ const App = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="phone number"
-                label="phone number"
+                name="Condition"
+                label="Condition"
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter user phone number',
+                    message: 'Please choose the Condition',
                   },
                 ]}
               >
-                <Input placeholder="Please enter user phone number" />
+                <Select placeholder="Please choose the Condition">
+                  <Option value="Normal">Normal</Option>
+                  <Option value="ဝန်ထမ်းသစ်">ဝန်ထမ်းသစ်</Option>
+                  <Option value="အလုပ်နောက်ကျ">အလုပ်နောက်ကျ</Option>
+                  <Option value="ခွင့်တစ်ပိုင်း">ခွင့်တစ်ပိုင်း</Option>
+                  <Option value="ခွင့်တစ်ရက်">ခွင့်တစ်ရက်</Option>
+                  <Option value="ခွင့်ရက်ရှည်">ခွင့်ရက်ရှည်</Option>
+                  <Option value="ခွင့်မဲ့">ခွင့်မဲ့</Option>
+                  <Option value="ဖိုင်းအပြစ်ပေး">ဖိုင်းအပြစ်ပေး</Option>
+                  <Option value="အလုပ်ထွက်မည့်သူ">အလုပ်ထွက်မည့်သူ</Option>
+                  <Option value="အလုပ်ထွက်သူ">အလုပ်ထွက်သူ</Option>
+                  <Option value="ကြိုတင်ခွင့်တိုင်သူ">ကြိုတင်ခွင့်တိုင်သူ</Option>
+                </Select>
               </Form.Item>
             </Col>
           </Row>
@@ -132,9 +176,9 @@ const App = () => {
                 ]}
               >
                 <Select placeholder="Please select an Location">
-                  <Option value="xiao">Location 1</Option>
-                  <Option value="mao">Location 2</Option>
-                  <Option value="location3">Location 3</Option>
+                  <Option value="ဆိုင်(၁)">ဆိုင်(၁)</Option>
+                  <Option value="ဆိုင်(၂)">ဆိုင်(၂)</Option>
+                  <Option value="ဆိုင်(၃)">ဆိုင်(၃)</Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -150,34 +194,39 @@ const App = () => {
                 ]}
               >
                 <Select placeholder="Please choose the ဌာန">
-                  <Option value="private">Private</Option>
-                  <Option value="public">Public</Option>
-                  <Option value="public">Public</Option>
-                  <Option value="public">Public</Option>
-                  <Option value="public">Public</Option>
+                  <Option value="Gထွက်">Gထွက်</Option>
+                  <Option value="လက်လီ">လက်လီ</Option>
+                  <Option value="လက်ကား">လက်ကား</Option>
+                  <Option value="ကားအော်ဒါ">ကားအော်ဒါ</Option>
+                  <Option value="အဝင်ပိုင်း">အဝင်ပိုင်း</Option>
+                  <Option value="ပစ္စည်းမှာ">ပစ္စည်းမှာ</Option>
+                  <Option value="အကြွေးကိုင်">အကြွေးကိုင်</Option>
+                  <Option value="စက်ကိုင်">စက်ကိုင်</Option>
+                  <Option value="အပြင်သွားပိုင်း">အပြင်သွား</Option>
+                  <Option value="စီစစ်ရေး">စီစစ်ရေး</Option>
                 </Select>
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
           <Col span={12}>
-              <Form.Item
-                name="Condition"
-                label="Condition"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please choose the Condition',
-                  },
-                ]}
+            <Form.Item
+                label="Profile Picture"
+                name="profile"
+                rules={[{ required: true, message: "Please upload a profile picture!" }]}
               >
-                <Select placeholder="Please choose the Condition">
-                  <Option value="jack">Jack Ma</Option>
-                  <Option value="tom">Tom Liu</Option>
-                </Select>
+                <Upload
+                  fileList={fileList}
+                  onChange={handleFileChange}
+                  beforeUpload={() => false} // Prevent automatic upload
+                  listType="picture"
+                  maxCount={1} // Allow only one file to be uploaded
+                >
+                  <Button icon={<UploadOutlined />}>Upload Profile Picture</Button>
+                </Upload>
               </Form.Item>
             </Col>
-            <Col span={12}>
+            {/* <Col span={12}>
               <Form.Item
                 name="Type"
                 label="Type"
@@ -193,7 +242,7 @@ const App = () => {
                   <Option value="tom">Out</Option>
                 </Select>
               </Form.Item>
-            </Col>
+            </Col> */}
             <Col span={12}>
               <Form.Item
                 name="dateTime"
@@ -214,6 +263,7 @@ const App = () => {
               </Form.Item>
             </Col>
           </Row>
+          
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -230,6 +280,16 @@ const App = () => {
               </Form.Item>
             </Col>
           </Row>
+          <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            className="w-full bg-blue-500 hover:bg-blue-600"
+          >
+            Create Worker
+          </Button>
+          </Form.Item>
         </Form>
       </Drawer>
       </div>

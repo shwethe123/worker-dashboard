@@ -2,6 +2,7 @@
 import { Layout, Card, Statistic, Row, Col, Button, DatePicker, Flex, Progress, Typography, Slider } from 'antd';
 import { UserOutlined} from '@ant-design/icons';
 import List from './List';
+import Test_fetch from '../../conpomnent/Test_fetch';
 
 const { Content } = Layout;
 const { RangePicker } = DatePicker;
@@ -54,7 +55,7 @@ const Dashboard = () => {
               <List/>
             </Col>
             <Col span={12}>
-              <List/> 
+              <Test_fetch/> 
             </Col>
           </Row>
           

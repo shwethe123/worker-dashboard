@@ -87,7 +87,7 @@ const Chart = () => {
   }, []);
 
   return (
-    <div>
+    <div className='bg-white p-5 rounded-lg shadow-lg'>
       <h1>Worker Data Chart</h1>
       <div id="chart">
         <ApexCharts
