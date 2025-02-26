@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Spin, Modal } from 'antd';
+import { Alert } from 'antd';
 const { Meta } = Card;
 import LeaderSet from './LeaderSet';
 
@@ -16,14 +17,21 @@ const App = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(`http://localhost:3000/api/worker_list`);
-        if (!response.ok) {
-          throw new Error('Network response is not ok');
+        const response_set = await fetch(`http://localhost:3000/api/worker_set`);
+       
+        if (!response.ok || !response_set.ok) {
+          throw new Error('Network combined is not ok');
         }
         const result = await response.json();
-        if (Array.isArray(result)) {
+        const set_result = await response_set.json();
+
+        const combined = [...result, ...set_result];
+        console.log(combined);
+
+        if (Array.isArray(result) || Array.isArray(set_result)) {
           setData(result);
         } else {
-          console.error('Expected array response but got:', result);
+          console.error('Expected array response but got:', result ,set_result);
         }
       } catch (error) {
         console.log('Fetch error:', error);

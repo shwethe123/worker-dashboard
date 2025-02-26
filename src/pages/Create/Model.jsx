@@ -125,22 +125,17 @@ const WorkerCreateForm = ({ onClose }) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                  name="Location"
-                  label="Location"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please select an Location',
-                    },
-                  ]}
-                >
-                  <Select placeholder="Please select an Location">
-                    <Option value="ဆိုင်(၁)">ဆိုင်(၁)</Option>
-                    <Option value="ဆိုင်(၂)">ဆိုင်(၂)</Option>
-                    <Option value="ဆိုင်(၃)">ဆိုင်(၃)</Option>
-                  </Select>
-                </Form.Item>
+            <Form.Item
+              label="Location"
+              name="location"
+              rules={[{ required: true, message: "Please select the location!" }]}
+            >
+              <Select placeholder="Select location" className="w-full">
+                  <Option value="ဆိုင်(၁)">ဆိုင်(၁)</Option>
+                  <Option value="ဆိုင်(၂)">ဆိုင်(၂)</Option>
+                  <Option value="ဆိုင်(၃)">ဆိုင်(၃)</Option>
+              </Select>
+          </Form.Item>
             </Col>
           </Row>
 
@@ -150,6 +145,8 @@ const WorkerCreateForm = ({ onClose }) => {
             rules={[{ required: true, message: "Please select the department!" }]}
           >
             <Select placeholder="Select department" className="w-full">
+              <Option value="IT">IT</Option>
+              <Option value="HR">HR</Option>
               <Option value="Gထွက်">Gထွက်</Option>
               <Option value="လက်လီ">လက်လီ</Option>
               <Option value="လက်ကား">လက်ကား</Option>
@@ -171,6 +168,7 @@ const WorkerCreateForm = ({ onClose }) => {
             <Select placeholder="Select status" className="w-full">
               <Option value="Active">Active</Option>
               <Option value="Inactive">Inactive</Option>
+              <Option value="On Leave">On Leave</Option>
             </Select>
           </Form.Item>
 

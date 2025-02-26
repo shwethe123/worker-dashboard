@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, Select, Input, Switch, Form, message } from 'antd'; // Import necessary components
+import axios from 'axios';
 const { Option } = Select;
 const { TextArea } = Input;
 
 const App = ({ setLeader,item }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isSwitchOn, setIsSwitchOn] = useState(false); // Switch state for showing TextArea
-  const [selectedValue, setSelectedValue] = useState(""); // Select box value
+  const [leader_approval, setLeader_approval] = useState(""); // Select box value
   const [password, setPassword] = useState(""); // Password input state
+  const [textArea, setTextArea] = useState(""); // TextArea input state
+  const [name, setName] = useState(""); // Name input state
   const [form] = Form.useForm(); // Initialize form
 
   const handleSwitchChange = (checked) => {
     setIsSwitchOn(checked); // Update the switch state
   };
 
-  const handleOk = () => {
+  useEffect(() => {
+    if (item) {
+      setName(item.name);
+    }
+  }, [item]);
+  console.log(name);
+
+  const handleOk = async () => {
     // Submit the form if validation passes
     form
       .validateFields()
@@ -27,7 +37,17 @@ const App = ({ setLeader,item }) => {
       .catch((errorInfo) => {
         console.log('Validation failed:', errorInfo);
       });
-  };
+
+      try {
+        const addLeader = {leader_approval, textArea };
+
+          if(item) {
+            const res = await axios.patch(`http://localhost:3000/api/worker_list/${item.id}`, addLeader);
+          }
+      } catch (error) {
+        console.log('Error:', error);
+      }
+  }
 
   const handleCancel = () => {
     setLeader(false);
@@ -35,8 +55,11 @@ const App = ({ setLeader,item }) => {
   };
 
   const handleSelectChange = (value) => {
-    setSelectedValue(value); // Update the selected value for select box
+    setLeader_approval(value); // Update the selected value for select box
+
   };
+
+
 
   return (
     <Modal title="ခွင့်ပြုရန်" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
@@ -62,7 +85,7 @@ const App = ({ setLeader,item }) => {
             rules={[{ required: true, message: 'Please select an option' }]}
           >
             <Select
-              value={selectedValue}
+              value={leader_approval}
               onChange={handleSelectChange}
               style={{ width: 200 }}
               placeholder="Select an option"
@@ -72,6 +95,21 @@ const App = ({ setLeader,item }) => {
               <Option value="option3">Option 3</Option>
             </Select>
           </Form.Item>
+              <Form.Item
+                label="Location"
+                name="location"
+                rules={[{ required: true, message: "Please select the location!" }]}
+              >
+              <Form.Item
+                label="Name"
+                // name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                rules={[{ required: true, message: "Please enter the worker name!" }]}
+              >
+                <Input placeholder="Enter worker name" className="w-full" />
+              </Form.Item>
+            </Form.Item>
         </div>
 
         <div style={{ marginTop: 20 }}>
@@ -102,6 +140,8 @@ const App = ({ setLeader,item }) => {
             <Form.Item
               label="မိမိ ခွင့်ပြုနိူင်သူများအတွက် အကြောင်းပြချက်ရေးရန်"
               name="textArea"
+              value={textArea}
+              onChange={(e) => setTextArea(e.target.value)}
               rules={[{ required: true, message: 'Please enter text' }]}
             >
               <TextArea rows={4} placeholder="Enter text here..." />
@@ -109,10 +149,10 @@ const App = ({ setLeader,item }) => {
           </div>
         )}
 
-        <div style={{ marginTop: 20 }}>
-          <p>မိမိ AM or AG ရွေးထည်ရမည်။</p>
-          <p>မိမိ Password ထည့်ရမည်။</p>
-          <p>မိမိ ခွင့်ပြုမည့်သူ၏ သက်ဆိုင်သူ ခေါင်းဆောင်မရှိရှင် ခွင့်ပေးနိူင်သည်။</p>
+        <div className='' style={{ marginTop: 20 }}>
+          <p className='bg-yellow-100 text-orange-500 p-2 rounded-full pl-2'>- မိမိ AM or AG ရွေးထည်ရမည်။</p>
+          <p className='bg-green-100 text-green-500 p-2 rounded-full pl-2'>မိမိ Password ထည့်ရမည်။</p>
+          <p className='bg-purple-100 text-purple-500 p-2 rounded-full pl-2'>မိမိ ခွင့်ပြုမည့်သူ၏ သက်ဆိုင်သူ ခေါင်းဆောင်မရှိရှင် ခွင့်ပေးနိူင်သည်။</p>
         </div>
       </Form>
     </Modal>

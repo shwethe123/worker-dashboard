@@ -37,8 +37,9 @@ const App = () => {
     fetchData();
   }, []);
 
-  const showDrawer = (id) => {
-    setSelectedWorker(id); 
+  const showDrawer = (item) => {
+    console.log(item); // Log the item to see if it's correct
+    setSelectedWorker(item); 
     setOpen(true);
   };
 
@@ -66,8 +67,6 @@ const App = () => {
   // Map to get progress percentages as integers
   const progressPercentages = current_date.map(months => getProgressPercentage(months));
   
-  
-
   // Pagination logic: Get the current page data
   const paginatedData = data.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
@@ -115,19 +114,18 @@ const App = () => {
             } 
           />
 
-
           <Flex vertical gap="small" style={{ width: 180 }}>
             <Progress
-              percent={progressPercentages[index]} // Use progress percentage for each worker
+              percent={progressPercentages[index] || 50} // Fallback to 0 if undefined
               size="small"
               status={
                 progressPercentages[index] >= 100
                   ? "success"
-                  : progressPercentages[index] >= 1
+                  : progressPercentages[index] <= 10
                   ? "active"
                   : item.condition === "အလုပ်ထွက်"
                   ? "exception"
-                  : "exception" // Default exception if no specific condition
+                  : "normal" // Default status
               }
             />
           </Flex>
