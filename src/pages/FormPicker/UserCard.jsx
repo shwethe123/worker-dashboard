@@ -1,69 +1,63 @@
-import React, { useState } from 'react';
-import { Card, Col, Row } from 'antd';
-
-function UserCard() {
-  const [data, setData] = useState();
-
-  const UserData = [
-    { id: 1, name: 'Salai', time: '35 second 1 minute 2 hour' },
-    { id: 2, name: 'Nung', time: '40 second 4 minute 2 hour' },
-    { id: 3, name: 'Mg', time: '39 second 11 minute 5 hour' },
-    { id: 1, name: 'Salai', time: '35 second 1 minute 2 hour' },
-    { id: 2, name: 'Nung', time: '40 second 4 minute 2 hour' },
-    { id: 3, name: 'Mg', time: '39 second 11 minute 5 hour' },
-    { id: 1, name: 'Salai', time: '35 second 1 minute 2 hour' },
-    { id: 2, name: 'Nung', time: '40 second 4 minute 2 hour' },
-    { id: 3, name: 'Mg', time: '39 second 11 minute 5 hour' },
-  ];
-
-  return (
-    <Row gutter={16}>
-      <Col span={8}>
-        <Card
-          title="Card 1"
-          bordered={false}
-          style={{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)', marginBottom: 16 }}
-        >
-          {UserData.map((item, index) => (
-            <div className='flex justify-between' key={index} style={{ marginBottom: 12 }}>
-              <p className='m-1' style={{ fontWeight: 'bold', fontSize: '16px' }}>{item.name}</p>
-              <p style={{ color: '#555' }}>{item.time}</p>
-            </div>
-          ))}
-        </Card>
-      </Col>
-
-      <Col span={8}>
-        <Card
-          title="Card 2"
-          bordered={false}
-          style={{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)', marginBottom: 16 }}
-        >
-          {UserData.map((item, index) => (
-            <div className='flex justify-between' key={index} style={{ marginBottom: 12 }}>
-              <p className='bg-purple-200 m-1' style={{ fontWeight: 'bold', fontSize: '16px' }}>{item.name}</p>
-              <p style={{ color: '#555' }}>{item.time}</p>
-            </div>
-          ))}
-        </Card>
-      </Col>
-
-      <Col span={8}>
-        <Card
-          title="Card 3"
-          bordered={false}
-          style={{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)', marginBottom: 16 }}
-        >
-          {UserData.map((item, index) => (
-            <div className='flex justify-between' key={index} style={{ marginBottom: 12 }}>
-              <p className='bg-purple-200 m-1' style={{ fontWeight: 'bold', fontSize: '16px' }}>{item.name}</p>
-              <p style={{ color: '#555' }}>{item.time}</p>
-            </div>
-          ))}
-        </Card>
-      </Col>
-    </Row>
-  );
-}
-
-export default UserCard;
+import React from 'react';
+import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
+import { Avatar, List, Space } from 'antd';
+const data = Array.from({
+  length: 23,
+}).map((_, i) => ({
+  href: 'https://ant.design',
+  title: `ant design part ${i}`,
+  avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
+  description:
+    'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+  content:
+    'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+}));
+const IconText = ({ icon, text }) => (
+  <Space>
+    {React.createElement(icon)}
+    {text}
+  </Space>
+);
+const App = () => (
+  <List
+    itemLayout="vertical"
+    size="large"
+    pagination={{
+      onChange: (page) => {
+        console.log(page);
+      },
+      pageSize: 3,
+    }}
+    dataSource={data}
+    footer={
+      <div>
+        <b>ant design</b> footer part
+      </div>
+    }
+    renderItem={(item) => (
+      <List.Item
+        key={item.title}
+        actions={[
+          <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+          <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+          <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+        ]}
+        extra={
+          <img
+            width={272}
+            alt="logo"
+            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+          />
+        }
+      >
+        <List.Item.Meta
+          avatar={<Avatar src={item.avatar} />}
+          title={<a href={item.href}>{item.title}</a>}
+          description={item.description}
+        />
+        {item.content}
+      </List.Item>
+    )}
+  />
+);
+export default App;

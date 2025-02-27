@@ -13,6 +13,7 @@ import FormPicker from './pages/FormPicker/FormPicker';
 import { PureContent } from 'antd/es/message/PurePanel';
 import DataAnalyst from './pages/DataAnalyst/DataAnalyst';
 import UserCard from './pages/UserCard/UserCard'
+
 // import Fixer from './pages/Fixer/Fixer';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -84,7 +85,7 @@ const App = () => {
       case '2':
         return <div><Dashboard /></div>;
       case '3':
-        return <WorkerTable/>;
+        return <div className='h-screen'><WorkerTable/></div>;
       case '4':
         return <FormPicker/>;
       case '5':

@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Spin, Modal } from 'antd';
-import { Alert } from 'antd';
+
 const { Meta } = Card;
 import LeaderSet from './LeaderSet';
 
 const App = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [visible, setVisible] = useState(false); // Modal visibility for settings
-  const [currentItem, setCurrentItem] = useState(null); // For storing the selected card data
-  const [leader, setLeader] = useState(false); // State to manage LeaderSet modal
-  const [selectItem, setSelectItem] = useState(null); // For storing selected worker data
+  const [visible, setVisible] = useState(false); 
+  const [currentItem, setCurrentItem] = useState(null); 
+  const [leader, setLeader] = useState(false); 
+  const [selectItem, setSelectItem] = useState(null);
+
+  const [leader_approval, setLeader_approval] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(`http://localhost:3000/api/worker_list`);
-        const response_set = await fetch(`http://localhost:3000/api/worker_set`);
        
-        if (!response.ok || !response_set.ok) {
+        if (!response.ok ) {
           throw new Error('Network combined is not ok');
         }
         const result = await response.json();
-        const set_result = await response_set.json();
 
-        const combined = [...result, ...set_result];
-        console.log(combined);
-
-        if (Array.isArray(result) || Array.isArray(set_result)) {
+        if (Array.isArray(result)) {
           setData(result);
         } else {
-          console.error('Expected array response but got:', result ,set_result);
+          console.error('Expected array response but got:', result );
         }
       } catch (error) {
         console.log('Fetch error:', error);
@@ -42,16 +39,16 @@ const App = () => {
     fetchData();
   }, []);
 
-  const current_date = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+  const current_date = new Date().toISOString().split('T')[0];
 
   const handleSettingClick = (item) => {
-    setCurrentItem(item); // Set the item to show its settings
-    setVisible(true); // Show settings modal
+    setCurrentItem(item);
+    setVisible(true);
   };
 
   const handleEditClick = (item) => {
-    setLeader(true); // Open LeaderSet modal when Edit button is clicked
-    setSelectItem(item); // Store the selected item (worker)
+    setLeader(true);
+    setSelectItem(item); // Set the entire item object
   };
 
   const handleEllipsisClick = (item) => {
@@ -59,7 +56,7 @@ const App = () => {
   };
 
   const handleModalClose = () => {
-    setVisible(false); // Close the settings modal
+    setVisible(false);
   };
 
   if (loading) {
@@ -74,11 +71,9 @@ const App = () => {
     <div className="p-4 h-screen">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {data.length > 0 ? (
-          // Filter workers whose date matches today's date
           data.filter(item => {
-            // Extract only the date part from item.time
-            const itemDate = item.time.split('T')[0]; // Getting the date part (YYYY-MM-DD)
-            return itemDate === current_date && item.condition !== 'Normal'; // Compare only date and condition
+            const itemDate = item.time.split('T')[0];
+            return itemDate === current_date && item.condition !== 'Normal';
           }).map((item, index) => (
             <Card
               className="shadow-sm"
@@ -128,7 +123,6 @@ const App = () => {
         )}
       </div>
 
-      {/* Second card section for all workers */}
       <div className="grid grid-cols-1 mt-4 border-t-2 border-gray-500 pt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {data.length > 0 ? (
             data.filter(item => item.condition !== 'Normal').map((item, index) => (
@@ -184,11 +178,11 @@ const App = () => {
       {/* Settings Modal */}
       <Modal title="Settings" visible={visible} onCancel={handleModalClose} footer={null}>
         <p>Settings for {currentItem ? currentItem.name : 'Item'}</p>
-        {/* Add your settings content here */}
       </Modal>
 
-      {/* Conditionally Render LeaderSet */}
-      {leader && selectItem && <LeaderSet setLeader={setLeader} item={selectItem} />}
+      {leader && selectItem &&
+       <LeaderSet setLeader={setLeader} item={selectItem} />
+       }
     </div>
   );
 };
