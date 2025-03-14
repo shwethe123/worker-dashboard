@@ -125,17 +125,17 @@ const WorkerCreateForm = ({ onClose }) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-            <Form.Item
-              label="Location"
-              name="location"
-              rules={[{ required: true, message: "Please select the location!" }]}
-            >
-              <Select placeholder="Select location" className="w-full">
-                  <Option value="ဆိုင်(၁)">ဆိုင်(၁)</Option>
-                  <Option value="ဆိုင်(၂)">ဆိုင်(၂)</Option>
-                  <Option value="ဆိုင်(၃)">ဆိုင်(၃)</Option>
-              </Select>
-          </Form.Item>
+              <Form.Item
+                label="Location"
+                name="location"
+                rules={[{ required: true, message: "Please select the location!" }]}
+              >
+                <Select placeholder="Select location" className="w-full">
+                    <Option value="ဆိုင်(၁)">ဆိုင်(၁)</Option>
+                    <Option value="ဆိုင်(၂)">ဆိုင်(၂)</Option>
+                    <Option value="ဆိုင်(၃)">ဆိုင်(၃)</Option>
+                </Select>
+            </Form.Item>
             </Col>
           </Row>
 

@@ -1,63 +1,115 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, List, Space } from 'antd';
-const data = Array.from({
-  length: 23,
-}).map((_, i) => ({
-  href: 'https://ant.design',
-  title: `ant design part ${i}`,
-  avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
-  description:
-    'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-  content:
-    'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-}));
+import { Avatar, List, Space, Modal } from 'antd';
+import axios from 'axios'; // Import axios for HTTP requests
+
 const IconText = ({ icon, text }) => (
   <Space>
     {React.createElement(icon)}
     {text}
   </Space>
 );
-const App = () => (
-  <List
-    itemLayout="vertical"
-    size="large"
-    pagination={{
-      onChange: (page) => {
-        console.log(page);
-      },
-      pageSize: 3,
-    }}
-    dataSource={data}
-    footer={
-      <div>
-        <b>ant design</b> footer part
-      </div>
-    }
-    renderItem={(item) => (
-      <List.Item
-        key={item.title}
-        actions={[
-          <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-          <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-          <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
-        ]}
-        extra={
-          <img
-            width={272}
-            alt="logo"
-            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-          />
+
+const App = () => {
+  const [workers, setWorkers] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentImage, setCurrentImage] = useState(''); 
+
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      try {
+        const reasonResponse = await axios.get('http://localhost:3000/api/worker_list'); 
+
+        const imageResponse = await axios.get('http://localhost:3000/api/worker_set');
+
+        const mergedWorkers = reasonResponse.data.map((worker) => {
+
+          const workerImage = imageResponse.data.find(imageData => imageData.id === worker.id);
+          return {
+            ...worker,
+            image: workerImage ? workerImage.image : '',
+          };
+        });
+
+        setWorkers(mergedWorkers);
+        console.log(setWorkers)
+      } catch (error) {
+        console.error('Error fetching worker data:', error);
+      }
+    };
+
+    fetchWorkers();
+  }, []);
+
+  const showImageModal = (image) => {
+    setCurrentImage(image);
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  return (
+    <div>
+      <List
+        itemLayout="vertical"
+        size="large"
+        pagination={{
+          onChange: (page) => {
+            console.log(page);
+          },
+          pageSize: 3,
+        }}
+        dataSource={workers}
+        footer={
+          <div>
+            <b>Worker List</b> Footer
+          </div>
         }
+        renderItem={(worker) => (
+          <List.Item
+            key={worker.id}
+            actions={[
+              <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+              <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+              <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+            ]}
+            extra={
+              <img
+                width={150}
+                alt="worker profile"
+                src={worker.image || 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png'}
+                onClick={() => showImageModal(worker.image)}
+                style={{ cursor: 'pointer' }}
+              />
+            }
+          >
+            <List.Item.Meta
+              avatar={<Avatar src={worker.profile} />}
+              title={<a href="https://ant.design">{worker.name}</a>}
+              description={worker.department}
+            />
+            <p>{worker.reason}</p>
+          </List.Item>
+        )}
+      />
+
+      <Modal
+        visible={isModalVisible}
+        footer={null}
+        onCancel={handleCancel}
+        width="50%" 
+        style={{ textAlign: 'center' }}
       >
-        <List.Item.Meta
-          avatar={<Avatar src={item.avatar} />}
-          title={<a href={item.href}>{item.title}</a>}
-          description={item.description}
+        <img
+          alt="full-view"
+          style={{ width: '100%', height: 'auto' }}
+          src={currentImage}
         />
-        {item.content}
-      </List.Item>
-    )}
-  />
-);
+      </Modal>
+    </div>
+  );
+};
+
 export default App;

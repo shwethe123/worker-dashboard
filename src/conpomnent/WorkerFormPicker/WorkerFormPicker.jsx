@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Drawer, Form, Input, message, Row, Select, Space, Upload } from 'antd';
-import UserCard from './UserCard';
 import axios from 'axios';
-import AutoComplete from './AutoComplete'
-import PermitCard from './PermitData'
+// import AutoComplete from './AutoComplete'
 
 const { Option } = Select;
-const App = () => {
+const App = ({editingRecord}) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
@@ -19,18 +17,17 @@ const App = () => {
     setFileList(fileList);
   };
 
+  console.log( "For Edit" ,editingRecord);
+
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const [startDate, endDate] = values.time;
+      const [startDate, endDate] = values.time; // Destructure the date range
       const formattedValues = {
         ...values,
-        startDate: startDate.format("YYYY-MM-DD HH:mm:ss"),
-        endDate: endDate.format("YYYY-MM-DD HH:mm:ss"),
-        status: values.status,  // Ensure this is included
-        leader_approval: values.leader_approval || 'pending', // Adjust this according to valid enum value
+        startDate: startDate.format("YYYY-MM-DD HH:mm:ss"), // Format start date
+        endDate: endDate.format("YYYY-MM-DD HH:mm:ss"), // Format end date
       };
-  
       const formData = new FormData();
       formData.append("image", fileList[0]?.originFileObj);
       Object.keys(formattedValues).forEach((key) => {
@@ -47,7 +44,7 @@ const App = () => {
           content: "Worker created successfully!",
         });
         form.resetFields();
-        setFileList([]); 
+        setFileList([]); // Clear file list after successful submission
       } else {
         throw new Error("Failed to create worker");
       }
@@ -61,7 +58,6 @@ const App = () => {
       setLoading(false);
     }
   };
-  
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed", errorInfo);
@@ -87,10 +83,6 @@ const App = () => {
           New form
         </Button>
         <div className="mt-5">
-          <UserCard />
-        </div>
-        <div>
-          {/* <PermitCard/> */}
         </div>
         <Drawer
           title="ခွင့်တိုင်ဖိုင်"

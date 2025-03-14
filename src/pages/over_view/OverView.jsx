@@ -3,6 +3,7 @@ import { Layout, Card, Statistic, Row, Col, Button, DatePicker, Flex, Progress, 
 import { UserOutlined} from '@ant-design/icons';
 import List from './List';
 import Test_fetch from '../../conpomnent/Test_fetch';
+import Store from '../../conpomnent/WorkerFormPicker/StoreOne'
 
 const { Content } = Layout;
 const { RangePicker } = DatePicker;
@@ -70,6 +71,9 @@ const Dashboard = () => {
                 <Button type="primary" style={{ width: '100%' }}>View Notifications</Button>
               </Card>
             </Col>
+          </Row>
+          <Row gutter={16}>
+              {/* <Store/> */}
           </Row>
         </Content>
       </Layout>
